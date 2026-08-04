@@ -1,0 +1,59 @@
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Environments and local configuration
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+env/
+*.local
+
+# Private automation, editor, and machine-local state
+.local_state/
+.project/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Large or generated research artifacts
+/data/
+/datasets/
+checkpoints/
+models/
+wandb/
+mlruns/
+lightning_logs/
+slurm_output/
+outputs/datasets/*
+!outputs/datasets/.gitkeep
+outputs/logs/*
+!outputs/logs/.gitkeep
+outputs/videos/*
+!outputs/videos/.gitkeep
+
+# Archives and binaries
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.sif
+*.onnx
+*.pt
+*.pth
+*.ckpt
