@@ -1,0 +1,16 @@
+{
+  "name": "visual-grasp-manu",
+  "image": "osrf/ros:humble-desktop",
+  "workspaceFolder": "/workspace/visual_grasp_manu",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-iot.vscode-ros"
+      ]
+    }
+  },
+  "postCreateCommand": "rosdep update || true",
+  "remoteUser": "root"
+}

@@ -8,5 +8,6 @@ Start here when entering the workspace:
 4. `project/TESTING_GUIDE.md`
 5. `workflows/DEVELOPMENT_WORKFLOW.md`
 6. `adr/0001-workspace-template.md`
+7. `adr/0002-configurable-ros2-grasp-pipeline.md`
 
 Keep documentation public-safe. Do not include secrets, private paths, private dataset locations, local machine details, or unpublished results that are not intended for release.

@@ -1,45 +1,74 @@
 # visual_grasp_manu
 
-Reusable research workspace for visual grasping and manipulation experiments.
+ROS 2 package for configurable visual grasp candidate generation from RGB-D sensor streams.
 
-This repository starts as a public-safe template. Fill in the project purpose, task scope, data sources, and experiment context before adding implementation-specific code.
+The package is intended to subscribe to one or more sensor streams, run a configurable perception and grasp-inference pipeline, and publish grasp candidates that a downstream manipulation stack can evaluate or execute.
+
+The inference backend is intentionally pluggable. A pipeline may use direct RGB-D grasp generation, semantic segmentation, 6-DoF object pose localization, point-cloud processing, or model-specific inputs required by methods such as 6DoF-GraspNet or Contact-GraspNet.
 
 ## Repository Layout
 
 ```text
 .
+├── .devcontainer/
 ├── assets/
+├── config/
 ├── docs/
 │   ├── adr/
 │   ├── project/
 │   └── workflows/
+├── launch/
 ├── outputs/
 │   ├── datasets/
 │   ├── logs/
 │   └── videos/
+├── resource/
 ├── scripts/
 ├── src/visual_grasp_manu/
 ├── tests/
 ├── AGENTS.md
+├── package.xml
 ├── README.md
+├── setup.py
 └── .gitignore
 ```
 
-## Getting Started
+## Installation
 
-1. Populate the project purpose in `docs/project/PROJECT_BRIEF.md`.
-2. Record the current implementation state in `docs/project/CURRENT_STATE.md`.
-3. Add repeatable commands to `docs/project/TESTING_GUIDE.md`.
-4. Move reusable code into `src/visual_grasp_manu/`.
-5. Keep generated datasets, videos, logs, and model checkpoints out of git unless explicitly reviewed for public release.
+Development is expected to happen inside the dev container. Open the repository in a dev-container-capable editor and rebuild the container from `.devcontainer/devcontainer.json`.
 
-## Development
-
-No build system is committed yet. Until one is added, keep workflows simple and scriptable:
+Inside the container, create or enter a ROS 2 workspace and build the package:
 
 ```bash
-python -m pytest
-python scripts/<name>.py
+source /opt/ros/humble/setup.bash
+cd /workspace
+mkdir -p ros2_ws/src
+ln -s /workspace/visual_grasp_manu ros2_ws/src/visual_grasp_manu
+cd ros2_ws
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install
+source install/setup.bash
 ```
 
-Document new dependencies, datasets, and commands in `docs/project/SETUP.md` before relying on them.
+## Configuration
+
+The default pipeline configuration lives in `config/pipeline.yaml`.
+
+The subscribed topics are model-dependent. For example:
+
+- an RGB-D image model may need RGB, depth, and camera info topics;
+- a point-cloud model may use a registered cloud topic instead of raw image topics;
+- a semantic grasping pipeline may subscribe to segmentation masks or class labels;
+- an object-centric pipeline may subscribe to 6-DoF object pose estimates before generating grasps.
+
+Keep each backend selectable by parameters rather than hard-coding one sensor layout or model family.
+
+## Demo
+
+The launch file is currently a scaffold for the main node:
+
+```bash
+ros2 launch visual_grasp_manu grasp_candidates.launch.py
+```
+
+Update this README whenever a runnable demo, model backend, required topic set, or example bag file is added.

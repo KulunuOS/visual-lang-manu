@@ -2,16 +2,19 @@
 
 ## Project Purpose & Context
 
-This workspace is a reusable public-safe template for visual grasping and manipulation research.
+This repository is a ROS 2 package for configurable visual grasp candidate generation from RGB-D and related perception streams.
 
-Fill in these sections before implementation begins:
+The main node is expected to subscribe to one or more ROS 2 sensor or perception topics, run a selected grasp-inference pipeline, and publish grasp candidates for a downstream manipulation stack.
 
-- Project objective:
-- Target robot, simulator, or hardware:
-- Main manipulation tasks:
-- Data sources:
-- Evaluation metrics:
-- Public release boundary:
+Current project context:
+
+- Project objective: generate grasp candidates for an object from visual sensor streams.
+- Primary inputs: RGB-D image streams, camera info, registered point clouds, segmentation outputs, object detections, or 6-DoF pose estimates depending on the selected backend.
+- Primary output: scored grasp candidates in a documented ROS 2 message contract.
+- Inference methods: keep room for multiple backends, including methods such as 6DoF-GraspNet, Contact-GraspNet, custom RGB-D models, geometric heuristics, or object-pose-driven pipelines.
+- Pipeline flexibility: semantic segmentation and 6-DoF object pose localization may be optional stages before grasp candidate generation.
+- Development environment: maintain the dev container as dependencies and runtime requirements evolve.
+- Public documentation: keep `README.md` updated with install instructions, launch commands, demo examples, required topics, and backend-specific setup.
 
 Do not leave private paths, private dataset names, credentials, tokens, hostnames, usernames, unpublished results, or local machine details in committed files.
 
@@ -30,8 +33,10 @@ This repository is intended to be connected to a public git remote. Treat every 
 
 Keep the workspace predictable:
 
-- `src/visual_grasp_manu/` for reusable Python package code.
-- `scripts/` for local entry points such as dataset generation, evaluation, conversion, and visualization.
+- `src/visual_grasp_manu/` for ROS 2 node code, pipeline interfaces, inference adapters, message conversion, and shared utilities.
+- `config/` for parameter files that select topics, frames, inference backend, thresholds, synchronization policy, and debug behavior.
+- `launch/` for ROS 2 launch files.
+- `scripts/` for local entry points such as dataset conversion, evaluation, profiling, and visualization.
 - `tests/` for unit and integration tests.
 - `assets/` for reviewed public assets only, with source and license notes when needed.
 - `docs/project/` for project brief, setup, current state, and testing guide.
@@ -39,19 +44,22 @@ Keep the workspace predictable:
 - `docs/adr/` for architecture decision records.
 - `outputs/` for generated datasets, logs, videos, and temporary experiment products that should usually remain untracked.
 
-Prefer small, focused modules. Avoid growing notebooks or scripts into hidden application code; extract reusable logic into `src/visual_grasp_manu/`.
+Prefer small, focused modules. Keep model-specific code behind adapter interfaces so one backend does not leak assumptions into the main ROS 2 node.
 
 ## Build, Test, and Development Commands
 
-No fixed toolchain is required by the template. Add exact commands here as the project becomes concrete.
+Use the dev container for normal development. Keep `.devcontainer/devcontainer.json` current as ROS 2, simulator, GPU, model, or system-library requirements change.
 
 Initial checks:
 
-- `python -m pytest`: run tests after test files are added.
-- `python scripts/<name>.py`: run a project script.
+- `source /opt/ros/humble/setup.bash`: load the default ROS 2 environment used by the current dev container.
+- `colcon build --symlink-install`: build the package from a ROS 2 workspace.
+- `source install/setup.bash`: overlay the built workspace.
+- `python -m pytest`: run Python tests after test files are added.
+- `ros2 launch visual_grasp_manu grasp_candidates.launch.py`: launch the current node scaffold.
 - `rg --files`: inspect tracked source layout quickly.
 
-When introducing `pyproject.toml`, `uv`, `poetry`, `make`, Docker, ROS, simulator dependencies, or GPU-specific setup, document the exact installation and execution commands in `docs/project/SETUP.md` and `docs/project/TESTING_GUIDE.md`.
+When introducing model dependencies, CUDA requirements, simulator dependencies, external checkpoints, message packages, or GPU-specific setup, document exact installation and execution commands in `README.md`, `docs/project/SETUP.md`, and `docs/project/TESTING_GUIDE.md`.
 
 ## Coding Style & Naming Conventions
 
@@ -63,7 +71,7 @@ Use standard Python conventions unless a future project-specific toolchain says 
 - Type hints for public interfaces.
 - Short docstrings for public functions and classes.
 
-Comments should clarify non-obvious assumptions, coordinate frames, camera conventions, control semantics, tensor shapes, dataset schemas, and evaluation thresholds. Avoid comment noise.
+Comments should clarify non-obvious assumptions, coordinate frames, camera conventions, topic synchronization, message schemas, model inputs, tensor shapes, dataset schemas, and evaluation thresholds. Avoid comment noise.
 
 ## Documentation Requirements
 
@@ -77,7 +85,7 @@ Keep these files current:
 - `docs/workflows/DEVELOPMENT_WORKFLOW.md`: repeatable implementation and review workflow.
 - `docs/adr/0001-workspace-template.md`: initial architecture decision record.
 
-Update documentation in the same change that introduces new commands, data formats, experiments, or public-facing behavior.
+Update documentation in the same change that introduces new commands, data formats, topics, frames, message contracts, inference backends, experiments, or public-facing behavior.
 
 ## Testing Guidelines
 
@@ -85,14 +93,17 @@ Place tests under `tests/` and name them `test_<module>.py`.
 
 Prioritize tests for:
 
+- ROS 2 parameter parsing and backend selection,
+- topic remapping and required-input validation,
 - dataset schema validation,
 - camera and coordinate-frame transforms,
 - grasp and placement success criteria,
-- policy/action interfaces,
+- grasp candidate message conversion,
+- inference adapter interfaces,
 - reproducibility-sensitive sampling,
 - file writing behavior that could accidentally publish generated or private artifacts.
 
-Add a regression test for every bug fix when practical. For visual or simulator behavior, include a lightweight smoke test plus documented manual verification steps.
+Add a regression test for every bug fix when practical. For ROS graph, visual, or simulator behavior, include a lightweight smoke test plus documented manual verification steps.
 
 ## Commit & Pull Request Guidelines
 

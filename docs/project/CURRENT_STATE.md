@@ -5,17 +5,24 @@
 - Workspace scaffold.
 - Documentation structure.
 - Public-safe ignore rules.
+- ROS 2 package metadata scaffold.
+- Default pipeline parameter file at `config/pipeline.yaml`.
+- Launch scaffold at `launch/grasp_candidates.launch.py`.
+- Dev-container scaffold using ROS 2 Humble.
 
 ## Known Gaps
 
-- Project purpose is not populated yet.
-- Toolchain is not selected yet.
-- No implementation modules are defined yet.
+- Main grasp candidate node is not implemented yet.
+- Grasp candidate message contract is not finalized yet.
+- Inference backend interface is not implemented yet.
+- Topic synchronization and input validation are not implemented yet.
+- Segmentation and 6-DoF pose localization stages are not implemented yet.
 - No tests are defined yet.
 
 ## Next Work
 
-1. Fill in `PROJECT_BRIEF.md`.
-2. Decide the initial simulator, dataset, or hardware target.
-3. Add setup commands.
-4. Add the first minimal source module and test.
+1. Define the grasp candidate message contract.
+2. Implement ROS 2 parameter parsing and required-topic validation.
+3. Add an inference adapter interface with a placeholder backend.
+4. Add launch tests or unit tests for configuration loading.
+5. Add the first runnable demo using either recorded sensor data, simulated topics, or a simple synthetic publisher.

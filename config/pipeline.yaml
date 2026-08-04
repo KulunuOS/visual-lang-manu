@@ -1,0 +1,35 @@
+visual_grasp_manu:
+  ros__parameters:
+    pipeline_name: rgbd_grasp_candidates
+
+    input_topics:
+      rgb: /camera/color/image_raw
+      depth: /camera/depth/image_rect_raw
+      camera_info: /camera/color/camera_info
+      point_cloud: ""
+      segmentation: ""
+      object_pose: ""
+
+    output_topics:
+      grasp_candidates: /grasp_candidates
+      debug_image: /visual_grasp_manu/debug_image
+
+    perception:
+      require_semantic_segmentation: false
+      require_object_pose: false
+      target_frame: camera_color_optical_frame
+      world_frame: world
+
+    inference:
+      method: placeholder
+      model_config: ""
+      checkpoint: ""
+      device: auto
+      max_candidates: 20
+      score_threshold: 0.3
+
+    performance:
+      synchronize_inputs: true
+      queue_size: 5
+      publish_debug: false
+      profile_latency: false
