@@ -9,6 +9,7 @@
 - Default pipeline parameter file at `config/pipeline.yaml`.
 - Launch scaffold at `launch/grasp_candidates.launch.py`.
 - Dev-container scaffold using ROS 2 Humble.
+- First demo research note at `docs/project/FIRST_DEMO_RESEARCH.md`.
 
 ## Known Gaps
 
@@ -23,6 +24,6 @@
 
 1. Define the grasp candidate message contract.
 2. Implement ROS 2 parameter parsing and required-topic validation.
-3. Add an inference adapter interface with a placeholder backend.
-4. Add launch tests or unit tests for configuration loading.
-5. Add the first runnable demo using either recorded sensor data, simulated topics, or a simple synthetic publisher.
+3. Add an inference adapter interface with a CAD-pose baseline backend.
+4. Add RViz marker visualization for candidate grasps.
+5. Add the first runnable rosbag demo.

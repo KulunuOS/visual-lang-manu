@@ -71,4 +71,6 @@ The launch file is currently a scaffold for the main node:
 ros2 launch visual_grasp_manu grasp_candidates.launch.py
 ```
 
+The first planned demo will replay a ROS 2 bag containing an object of interest, localize the object using a CAD-aware pose stage or pose-topic stub, generate grasp candidates, and publish RViz visualization markers.
+
 Update this README whenever a runnable demo, model backend, required topic set, or example bag file is added.
