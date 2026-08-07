@@ -17,6 +17,7 @@ setup(
                 "config/grasp_demo.yaml",
                 "config/pipeline.yaml",
                 "config/pose_stub.yaml",
+                "config/pose_stub_grasp_demo.rviz",
             ],
         ),
         (
