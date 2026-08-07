@@ -10,6 +10,7 @@
 - Launch scaffold at `launch/grasp_candidates.launch.py`.
 - Dev-container scaffold using ROS 2 Humble.
 - First demo research note at `docs/project/FIRST_DEMO_RESEARCH.md`.
+- FoundationPose first-demo feasibility note at `docs/project/FOUNDATIONPOSE_DEMO_FEASIBILITY.md`.
 
 ## Known Gaps
 
@@ -24,6 +25,8 @@
 
 1. Define the grasp candidate message contract.
 2. Implement ROS 2 parameter parsing and required-topic validation.
-3. Add an inference adapter interface with a CAD-pose baseline backend.
-4. Add RViz marker visualization for candidate grasps.
-5. Add the first runnable rosbag demo.
+3. Add a pose-topic stub so the grasp and visualization path can run before GPU pose estimation is integrated.
+4. Add an inference adapter interface with a CAD-pose baseline backend.
+5. Add RViz marker visualization for candidate grasps.
+6. Add FoundationPose as a replaceable pose provider.
+7. Add the first runnable rosbag demo.
