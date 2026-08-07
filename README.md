@@ -75,4 +75,6 @@ The first planned demo will replay a ROS 2 bag containing an object of interest,
 
 Implementation should keep the pose provider replaceable. The grasp and visualization path should also run from a simple pose-topic stub so it can be tested before the full GPU pose-estimation stack is installed.
 
+For background on ONNX, TensorRT, CUDA, engine files, and how FoundationPose fits this package, see `docs/project/INFERENCE_RUNTIME_BACKGROUND.md`.
+
 Update this README whenever a runnable demo, model backend, required topic set, or example bag file is added.

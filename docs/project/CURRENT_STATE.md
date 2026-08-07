@@ -11,6 +11,7 @@
 - Dev-container scaffold using ROS 2 Humble.
 - First demo research note at `docs/project/FIRST_DEMO_RESEARCH.md`.
 - FoundationPose first-demo feasibility note at `docs/project/FOUNDATIONPOSE_DEMO_FEASIBILITY.md`.
+- Inference runtime background note at `docs/project/INFERENCE_RUNTIME_BACKGROUND.md`.
 
 ## Known Gaps
 
