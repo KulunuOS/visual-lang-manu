@@ -23,8 +23,17 @@ colcon test-result --verbose
 Current launch scaffold:
 
 ```bash
-ros2 launch visual_grasp_manu grasp_candidates.launch.py
+ros2 launch visual_grasp_manu pose_stub_grasp_demo.launch.py
 ```
+
+Expected phase-1 topics:
+
+```bash
+ros2 topic echo /visual_grasp_manu/object_pose --once
+ros2 topic echo /visual_grasp_manu/grasp_markers --once
+```
+
+In RViz, set the fixed frame to `world` and add a `MarkerArray` display for `/visual_grasp_manu/grasp_markers`.
 
 As the node is implemented, document manual checks for:
 

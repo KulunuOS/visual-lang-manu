@@ -10,8 +10,22 @@ setup(
     data_files=[
         ("share/ament_index/resource_index/packages", [f"resource/{package_name}"]),
         (f"share/{package_name}", ["package.xml"]),
-        (f"share/{package_name}/config", ["config/pipeline.yaml"]),
-        (f"share/{package_name}/launch", ["launch/grasp_candidates.launch.py"]),
+        (
+            f"share/{package_name}/config",
+            [
+                "config/demo_grasps.yaml",
+                "config/grasp_demo.yaml",
+                "config/pipeline.yaml",
+                "config/pose_stub.yaml",
+            ],
+        ),
+        (
+            f"share/{package_name}/launch",
+            [
+                "launch/grasp_candidates.launch.py",
+                "launch/pose_stub_grasp_demo.launch.py",
+            ],
+        ),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
@@ -23,6 +37,7 @@ setup(
     entry_points={
         "console_scripts": [
             "grasp_candidate_node = visual_grasp_manu.grasp_candidate_node:main",
+            "pose_stub_node = visual_grasp_manu.pose_stub_node:main",
         ],
     },
 )

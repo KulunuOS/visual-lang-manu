@@ -65,11 +65,19 @@ Keep each backend selectable by parameters rather than hard-coding one sensor la
 
 ## Demo
 
-The launch file is currently a scaffold for the main node:
+The phase-1 demo runs without FoundationPose. It publishes a fixed object pose, transforms a small CAD-frame grasp library around that object, and publishes RViz markers for the object and candidate grasps.
 
 ```bash
-ros2 launch visual_grasp_manu grasp_candidates.launch.py
+ros2 launch visual_grasp_manu pose_stub_grasp_demo.launch.py
 ```
+
+In RViz, add a `MarkerArray` display for:
+
+```text
+/visual_grasp_manu/grasp_markers
+```
+
+The demo should show a simple object marker and several colored grasp candidates. Green candidates have higher scores; redder candidates have lower scores.
 
 The first planned demo will replay a ROS 2 bag containing an object of interest, localize the object using FoundationPose with an available CAD mesh or reference captures, generate grasp candidates, and publish RViz visualization markers.
 

@@ -1,0 +1,28 @@
+object_frame: object
+gripper: parallel_jaw
+grasps:
+  - label: top_down
+    score: 0.95
+    pose:
+      position: [0.0, 0.0, 0.08]
+      orientation_xyzw: [0.0, 0.7071068, 0.0, 0.7071068]
+  - label: front
+    score: 0.85
+    pose:
+      position: [0.08, 0.0, 0.0]
+      orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+  - label: back
+    score: 0.8
+    pose:
+      position: [-0.08, 0.0, 0.0]
+      orientation_xyzw: [0.0, 0.0, 1.0, 0.0]
+  - label: left
+    score: 0.75
+    pose:
+      position: [0.0, 0.08, 0.0]
+      orientation_xyzw: [0.0, 0.0, 0.7071068, 0.7071068]
+  - label: right
+    score: 0.75
+    pose:
+      position: [0.0, -0.08, 0.0]
+      orientation_xyzw: [0.0, 0.0, -0.7071068, 0.7071068]

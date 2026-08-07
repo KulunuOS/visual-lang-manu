@@ -121,7 +121,7 @@ Keep FoundationPose behind a ROS topic boundary instead of embedding it directly
 
 Proceed with FoundationPose as the localization backend, but keep the first demo layered:
 
-1. Build the bag replay, pose-topic stub, grasp library, candidate publisher, and RViz visualization first.
+1. Build the pose-topic stub, grasp library, candidate publisher, and RViz visualization first.
 2. Add FoundationPose as a replaceable pose provider once the visualization and grasp contract are stable.
 3. Add a simple detector or segmentation stage only as needed to provide FoundationPose initialization.
 4. Keep all FoundationPose, CUDA, TensorRT, and Isaac ROS setup documented in the dev-container and README as soon as it is introduced.

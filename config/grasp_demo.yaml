@@ -1,0 +1,11 @@
+grasp_candidate_node:
+  ros__parameters:
+    object_pose_topic: /visual_grasp_manu/object_pose
+    marker_topic: /visual_grasp_manu/grasp_markers
+    score_threshold: 0.0
+    max_candidates: 8
+    object_scale: [0.08, 0.08, 0.08]
+    gripper_width: 0.08
+    jaw_length: 0.08
+    jaw_thickness: 0.008
+    axis_length: 0.07
