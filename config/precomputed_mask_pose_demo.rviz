@@ -1,0 +1,120 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Enabled: true
+      Name: Grid
+      Plane: XY
+      Value: true
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: true
+      Name: Scene RGB-D Cloud
+      Decay Time: 1
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /visual_grasp_manu/live/rgbd_cloud
+      Value: true
+      Size (Pixels): 2
+      Style: Points
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: true
+      Name: Masked Object Cloud
+      Decay Time: 2
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /visual_grasp_manu/mask_overlay/cloud
+      Value: true
+      Size (Pixels): 4
+      Style: Points
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: Camera Pose Path
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp_manu/inferred_camera_path
+      Value: true
+      Line Style: Lines
+      Line Width: 0.01
+      Color: 0; 255; 40
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Camera Frustums
+      Topic:
+        Depth: 10
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp_manu/camera_pose_markers
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Mask Marker
+      Topic:
+        Depth: 10
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp_manu/mask_overlay/markers
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Generated Object Mesh
+      Topic:
+        Depth: 10
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp_manu/object_mesh_marker
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Name: Mask Overlay Image
+      Topic:
+        Depth: 2
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /visual_grasp_manu/mask_overlay/image
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 38; 38; 38
+    Fixed Frame: odom
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 1.5
+      Focal Point:
+        X: 0.0
+        Y: 0.0
+        Z: 0.4
+      Name: Current View
+      Pitch: 0.55
+      Target Frame: odom
+      Yaw: 0.8
+Window Geometry:
+  Height: 900
+  Width: 1400
+  X: 40
+  Y: 40

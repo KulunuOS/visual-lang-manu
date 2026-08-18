@@ -1,17 +1,27 @@
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
+from launch.substitutions import LaunchConfiguration
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    rviz = LaunchConfiguration("rviz")
     package_share = FindPackageShare("visual_grasp_manu")
     pose_config = PathJoinSubstitution([package_share, "config", "pose_stub.yaml"])
     grasp_config = PathJoinSubstitution([package_share, "config", "grasp_demo.yaml"])
     grasp_library = PathJoinSubstitution([package_share, "config", "demo_grasps.yaml"])
+    rviz_config = PathJoinSubstitution([package_share, "config", "pose_stub_grasp_demo.rviz"])
 
     return LaunchDescription(
         [
+            DeclareLaunchArgument(
+                "rviz",
+                default_value="false",
+                description="Start RViz with the pose-stub grasp demo configuration.",
+            ),
             Node(
                 package="visual_grasp_manu",
                 executable="pose_stub_node",
@@ -28,6 +38,14 @@ def generate_launch_description():
                     grasp_config,
                     {"grasp_library_path": grasp_library},
                 ],
+            ),
+            Node(
+                package="rviz2",
+                executable="rviz2",
+                name="rviz2",
+                output="screen",
+                arguments=["-d", rviz_config],
+                condition=IfCondition(rviz),
             ),
         ]
     )

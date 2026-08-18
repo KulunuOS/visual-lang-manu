@@ -13,8 +13,13 @@ Visualization Manager:
       Value: true
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
-      Marker Topic: /visual_grasp_manu/grasp_markers
       Name: Grasp Markers
+      Topic:
+        Depth: 10
+        Durability Policy: System Default
+        History Policy: Keep Last
+        Reliability Policy: System Default
+        Value: /visual_grasp_manu/grasp_markers
       Value: true
   Enabled: true
   Global Options:

@@ -1,7 +1,13 @@
 {
   "name": "visual-grasp-manu",
-  "image": "osrf/ros:humble-desktop",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
   "workspaceFolder": "/workspace/visual_grasp_manu",
+  "runArgs": [
+    "--shm-size=8g"
+  ],
   "customizations": {
     "vscode": {
       "extensions": [

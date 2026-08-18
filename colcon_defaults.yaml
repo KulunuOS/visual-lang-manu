@@ -1,0 +1,14 @@
+"":
+  log-base: /tmp/visual_grasp_manu/log
+
+build:
+  build-base: /tmp/visual_grasp_manu/build
+  install-base: /tmp/visual_grasp_manu/install
+  symlink-install: true
+
+test:
+  build-base: /tmp/visual_grasp_manu/build
+  install-base: /tmp/visual_grasp_manu/install
+
+test-result:
+  test-result-base: /tmp/visual_grasp_manu/build

@@ -67,3 +67,12 @@ def compose_pose(parent: PoseData, child: PoseData) -> PoseData:
     )
     orientation = quaternion_multiply(parent_q, normalize_quaternion(child.orientation_xyzw))
     return PoseData(position=position, orientation_xyzw=orientation)
+
+
+def inverse_pose(pose: PoseData) -> PoseData:
+    orientation_inverse = quaternion_conjugate(normalize_quaternion(pose.orientation_xyzw))
+    inverse_position = rotate_vector(
+        orientation_inverse,
+        tuple(-component for component in pose.position),
+    )
+    return PoseData(position=inverse_position, orientation_xyzw=orientation_inverse)

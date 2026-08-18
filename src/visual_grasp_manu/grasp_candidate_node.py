@@ -5,12 +5,14 @@ from typing import Any
 
 import rclpy
 import yaml
-from geometry_msgs.msg import Pose, PoseStamped, Vector3
+from geometry_msgs.msg import Point, Pose, PoseStamped, Vector3
 from rclpy.node import Node
 from std_msgs.msg import ColorRGBA
 from visualization_msgs.msg import Marker, MarkerArray
 
 from visual_grasp_manu.transforms import PoseData, compose_pose, rotate_vector
+
+Point3 = tuple[float, float, float]
 
 
 class GraspCandidateNode(Node):
@@ -23,9 +25,9 @@ class GraspCandidateNode(Node):
         self.declare_parameter("max_candidates", 20)
         self.declare_parameter("object_scale", [0.08, 0.08, 0.08])
         self.declare_parameter("gripper_width", 0.08)
-        self.declare_parameter("jaw_length", 0.08)
-        self.declare_parameter("jaw_thickness", 0.008)
-        self.declare_parameter("axis_length", 0.06)
+        self.declare_parameter("gripper_depth", 0.08)
+        self.declare_parameter("gripper_approach_length", 0.06)
+        self.declare_parameter("wireframe_thickness", 0.0025)
 
         object_pose_topic = str(self.get_parameter("object_pose_topic").value)
         marker_topic = str(self.get_parameter("marker_topic").value)
@@ -75,10 +77,9 @@ class GraspCandidateNode(Node):
                     marker_id=next_marker_id,
                     pose=candidate_pose,
                     score=float(grasp.get("score", 0.0)),
-                    label=str(grasp.get("label", f"grasp_{index}")),
                 )
             )
-            next_marker_id += 4
+            next_marker_id += 1
 
         self.marker_publisher.publish(marker_array)
 
@@ -110,98 +111,62 @@ class GraspCandidateNode(Node):
         marker_id: int,
         pose: PoseData,
         score: float,
-        label: str,
     ) -> list[Marker]:
-        color = score_color(score)
-        left_jaw = self.jaw_marker(frame_id, stamp, marker_id, pose, 1.0, color)
-        right_jaw = self.jaw_marker(frame_id, stamp, marker_id + 1, pose, -1.0, color)
-        approach = self.approach_marker(frame_id, stamp, marker_id + 2, pose, color)
-        text = self.text_marker(frame_id, stamp, marker_id + 3, pose, label, score)
-        return [left_jaw, right_jaw, approach, text]
-
-    def jaw_marker(
-        self,
-        frame_id: str,
-        stamp,
-        marker_id: int,
-        grasp_pose: PoseData,
-        side: float,
-        color: ColorRGBA,
-    ) -> Marker:
-        gripper_width = float(self.get_parameter("gripper_width").value)
-        local_offset = (0.0, side * gripper_width / 2.0, 0.0)
-        world_offset = rotate_vector(grasp_pose.orientation_xyzw, local_offset)
-        jaw_pose = PoseData(
-            position=tuple(grasp_pose.position[index] + world_offset[index] for index in range(3)),
-            orientation_xyzw=grasp_pose.orientation_xyzw,
-        )
-
         marker = Marker()
         marker.header.frame_id = frame_id
         marker.header.stamp = stamp
-        marker.ns = "visual_grasp_manu_gripper"
+        marker.ns = "visual_grasp_manu_contact_graspnet_gripper"
         marker.id = marker_id
-        marker.type = Marker.CUBE
+        marker.type = Marker.LINE_STRIP
         marker.action = Marker.ADD
-        marker.pose = pose_msg_from_data(jaw_pose)
+        marker.pose.orientation.w = 1.0
         marker.scale = Vector3(
-            x=float(self.get_parameter("jaw_length").value),
-            y=float(self.get_parameter("jaw_thickness").value),
-            z=float(self.get_parameter("jaw_thickness").value),
+            x=float(self.get_parameter("wireframe_thickness").value),
+            y=0.0,
+            z=0.0,
         )
-        marker.color = color
-        return marker
-
-    def approach_marker(
-        self,
-        frame_id: str,
-        stamp,
-        marker_id: int,
-        grasp_pose: PoseData,
-        color: ColorRGBA,
-    ) -> Marker:
-        marker = Marker()
-        marker.header.frame_id = frame_id
-        marker.header.stamp = stamp
-        marker.ns = "visual_grasp_manu_approach"
-        marker.id = marker_id
-        marker.type = Marker.ARROW
-        marker.action = Marker.ADD
-        marker.pose = pose_msg_from_data(grasp_pose)
-        marker.scale = Vector3(
-            x=float(self.get_parameter("axis_length").value),
-            y=0.01,
-            z=0.01,
-        )
-        marker.color = color
-        return marker
-
-    def text_marker(
-        self,
-        frame_id: str,
-        stamp,
-        marker_id: int,
-        grasp_pose: PoseData,
-        label: str,
-        score: float,
-    ) -> Marker:
-        marker = Marker()
-        marker.header.frame_id = frame_id
-        marker.header.stamp = stamp
-        marker.ns = "visual_grasp_manu_labels"
-        marker.id = marker_id
-        marker.type = Marker.TEXT_VIEW_FACING
-        marker.action = Marker.ADD
-        marker.pose = pose_msg_from_data(
-            PoseData(
-                position=(grasp_pose.position[0], grasp_pose.position[1], grasp_pose.position[2] + 0.06),
-                orientation_xyzw=(0.0, 0.0, 0.0, 1.0),
+        marker.color = score_color(score)
+        marker.points = [
+            point_msg_from_tuple(point)
+            for point in contact_graspnet_gripper_polyline(
+                grasp_pose=pose,
+                gripper_width=float(self.get_parameter("gripper_width").value),
+                gripper_depth=float(self.get_parameter("gripper_depth").value),
+                approach_length=float(self.get_parameter("gripper_approach_length").value),
             )
-        )
-        marker.scale.z = 0.025
-        marker.color = ColorRGBA(r=1.0, g=1.0, b=1.0, a=1.0)
-        marker.text = f"{label}: {score:.2f}"
-        return marker
+        ]
+        return [marker]
+
+
+def contact_graspnet_gripper_polyline(
+    grasp_pose: PoseData,
+    gripper_width: float,
+    gripper_depth: float,
+    approach_length: float,
+) -> list[Point3]:
+    half_width = gripper_width / 2.0
+    local_points = [
+        (-approach_length, 0.0, 0.0),
+        (0.0, 0.0, 0.0),
+        (0.0, half_width, 0.0),
+        (gripper_depth, half_width, 0.0),
+        (0.0, half_width, 0.0),
+        (0.0, -half_width, 0.0),
+        (gripper_depth, -half_width, 0.0),
+    ]
+    return [transform_local_point(grasp_pose, point) for point in local_points]
+
+
+def transform_local_point(pose: PoseData, point: Point3) -> Point3:
+    rotated = rotate_vector(pose.orientation_xyzw, point)
+    return tuple(
+        pose.position[index] + rotated[index]
+        for index in range(3)
+    )
+
+
+def point_msg_from_tuple(point: Point3) -> Point:
+    return Point(x=point[0], y=point[1], z=point[2])
 
 
 def pose_data_from_msg(msg: Pose) -> PoseData:
@@ -209,18 +174,6 @@ def pose_data_from_msg(msg: Pose) -> PoseData:
         position=(msg.position.x, msg.position.y, msg.position.z),
         orientation_xyzw=(msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w),
     )
-
-
-def pose_msg_from_data(pose: PoseData) -> Pose:
-    msg = Pose()
-    msg.position.x = pose.position[0]
-    msg.position.y = pose.position[1]
-    msg.position.z = pose.position[2]
-    msg.orientation.x = pose.orientation_xyzw[0]
-    msg.orientation.y = pose.orientation_xyzw[1]
-    msg.orientation.z = pose.orientation_xyzw[2]
-    msg.orientation.w = pose.orientation_xyzw[3]
-    return msg
 
 
 def pose_data_from_grasp(grasp: dict[str, Any]) -> PoseData:
