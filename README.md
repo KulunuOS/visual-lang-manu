@@ -36,10 +36,10 @@ sampled camera frustums in blue/cyan.
 
 **Object mask overlay**
 
-In this prototype, the object masks are computed before replay rather than
-estimated live during RViz playback. The replay node publishes the saved mask
-overlay image, the masked object cloud, camera pose markers, and the generated
-mesh marker into RViz at a stable playback rate.
+In this prototype, the object masks are generated offline with Grounding DINO
+and SAM2 using the text query `blue object`. During RViz playback, the replay
+node publishes the saved mask overlay image, the masked object cloud, camera
+pose markers, and the generated mesh marker at a stable playback rate.
 
 ![Mask overlay visualization in RViz](assets/demo/mask_overlay_rviz.gif)
 
