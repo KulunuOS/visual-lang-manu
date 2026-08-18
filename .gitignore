@@ -13,6 +13,11 @@ __pycache__/
 .coverage
 htmlcov/
 
+# ROS 2 / colcon build artifacts
+/build/
+/install/
+/log/
+
 # Environments and local configuration
 .env
 .env.*
@@ -29,6 +34,10 @@ env/
 .idea/
 *.swp
 *.swo
+
+# Internal planning and agent workflow notes
+/docs/
+AGENTS.md
 
 # Large or generated research artifacts
 /data/
